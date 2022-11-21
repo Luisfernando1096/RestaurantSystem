@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="77c3b05e-5dcd-43b1-9709-dca89eb28a95">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="cliente" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select idOrden, fecha_orden, cli.nombres as cliente,emp.nombres as empleado, ordenes.estado_orden as estado, t.tipo as tipo, fecha_envio from ordenes 
+inner join usuarios as cli on cli.usuario = ordenes.idCliente 
+inner join usuarios as emp on emp.usuario = ordenes.idEmpleado 
+inner join tipo_orden as t on t.idTipo = ordenes.idTipo where cli.usuario = $P{cliente};]]>
+	</queryString>
+	<field name="idOrden" class="java.lang.Integer"/>
+	<field name="fecha_orden" class="java.sql.Timestamp"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="empleado" class="java.lang.String"/>
+	<field name="estado" class="java.lang.String"/>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="fecha_envio" class="java.sql.Timestamp"/>
+	<variable name="fecha_orden_1" class="java.lang.Integer" resetType="Column" calculation="Count">
+		<variableExpression><![CDATA[$F{fecha_orden}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="73" splitType="Stretch">
+			<image hAlign="Center">
+				<reportElement x="0" y="0" width="555" height="53" uuid="b0ac7caf-0ee9-4907-85f8-c16ba40a0931"/>
+				<imageExpression><![CDATA["C:\\Users\\fruiz\\OneDrive\\Escritorio\\Curso de programacion java\\RestaurantSystem\\web\\assets\\images\\logoRestauranteCompleto.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="34" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="33" height="20" forecolor="#3333FF" uuid="e36fe81e-0926-42ff-abd7-85c42184dd8c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="33" y="0" width="94" height="20" forecolor="#3333FF" uuid="1cdaaf98-6c51-4ea9-870f-65b1ad61f661"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[fecha_orden]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="127" y="0" width="90" height="20" forecolor="#3333FF" uuid="338123c0-f90f-418b-8347-8e1987f6df6c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="217" y="0" width="83" height="20" forecolor="#3333FF" uuid="02b1069a-17f9-4a03-a5ac-a819952c1a79"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[empleado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="81" height="20" forecolor="#3333FF" uuid="6fd5b459-09c4-45b8-a512-9ab55d2d3ac4"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[estado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="381" y="0" width="74" height="20" forecolor="#3333FF" uuid="1a8f9482-1cf9-4a7f-bedf-caa25c03c12e"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[tipo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="0" width="100" height="20" forecolor="#3333FF" uuid="e8ccb9ee-4b6a-4229-a90b-0ca3f2a60bff"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[fecha_envio]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="33" height="20" uuid="9009bb86-ad6e-4b5b-a861-092683c630de"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idOrden}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="33" y="0" width="94" height="20" uuid="dd01e412-3d81-40e5-a556-e3b8283df0ae"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_orden}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="127" y="0" width="90" height="20" uuid="878772cf-39b2-4d2b-a869-9135281c70e1"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="217" y="0" width="83" height="20" uuid="a70e1d48-e432-4354-8872-8e8f29082590"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{empleado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="81" height="20" uuid="7311329d-772a-4270-9862-ee9e6a079c42"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="381" y="0" width="74" height="20" uuid="c6c639d6-b0a6-454d-b858-7674544fe327"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="0" width="100" height="20" uuid="bc056f09-9843-4c91-87fd-0005f1cd72ac"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_envio}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="435" y="32" width="80" height="20" uuid="0cb00aa7-271b-4b33-ad01-c9fe7e149822"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="32" width="40" height="20" uuid="a1990db2-f5fa-4dc7-bbe5-beabb0061eaa"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
