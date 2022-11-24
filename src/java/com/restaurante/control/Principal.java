@@ -16,12 +16,11 @@ public class Principal extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String op = request.getParameter("op");
+        HttpSession s = request.getSession();
         String accion = request.getParameter("accion");
         if (accion == null) {
-            System.out.println("Entro con exito");
-            String op = request.getParameter("op");
-            HttpSession s = request.getSession();
-            
+
             //Redirecciona donde quiero al no estar logueado
             if (s.getAttribute("Usuario") == null) {
                 request.getRequestDispatcher("Login").forward(request, response);
@@ -31,27 +30,7 @@ public class Principal extends HttpServlet {
             request.setAttribute("MenuPrincipal", MenuPrincipal);
 
             //Controlar los permisos
-            boolean control = false;
-            if (op != null) {
-                List<Menus> PermisosAsignados = per.stream().filter(field -> field.getIdPadre() == Integer.parseInt(op)).collect(Collectors.toList());
-                request.setAttribute("PermisosAsignados", PermisosAsignados);
-                for (Menus PermisosAsignado : per) {
-                    if (PermisosAsignado.getIdMenu() == Integer.parseInt(op)) {
-                        control = true;
-                    }
-
-                }
-            }
-            
-            //Aqui defino si tiene permiso un usuario logueado a estar en otra pagina
-            if (!control && op == null) {
-                request.getRequestDispatcher("principal.jsp").forward(request, response);
-            } else if (control) {
-                request.getRequestDispatcher("principal.jsp").forward(request, response);
-            } else {
-                request.getRequestDispatcher("testConexion2.jsp").forward(request, response);
-            }
-            System.out.println("Esto contiene op " + op);
+            com.restaurante.utilerias.Permiso.getPermiso(s, "principal.jsp", request, response, op);
             request.setAttribute("op", op);
         } else if (accion.equals("logout")) {
             logout(request, response);

@@ -1,22 +1,35 @@
 package com.restaurante.entidades;
 
 import com.restaurante.anotaciones.*;
+import java.math.BigDecimal;
 
 @Entity(table = "postre_orden")
 public class PostreOrden {
+    @PrimaryKey
+    @AutoIncrement
+    private int idPostreOrden;
     @NotNull
-    int idPostre;
+    private int idPostre;
     @NotNull
-    int idOrden;
+    private int idOrden;
     @NotNull
-    int cantidad;
+    private int cantidad;
     @NotNull
-    double sub_total;
+    private BigDecimal sub_total;
 
     public PostreOrden() {
     }
 
-    public PostreOrden(int idPostre, int idOrden, int cantidad, double sub_total) {
+    public int getIdPostreOrden() {
+        return idPostreOrden;
+    }
+
+    public void setIdPostreOrden(int idPostreOrden) {
+        this.idPostreOrden = idPostreOrden;
+    }
+
+    public PostreOrden(int idPostreOrden, int idPostre, int idOrden, int cantidad, BigDecimal sub_total) {
+        this.idPostreOrden = idPostreOrden;
         this.idPostre = idPostre;
         this.idOrden = idOrden;
         this.cantidad = cantidad;
@@ -47,11 +60,11 @@ public class PostreOrden {
         this.cantidad = cantidad;
     }
 
-    public double getSub_total() {
+    public BigDecimal getSub_total() {
         return sub_total;
     }
 
-    public void setSub_total(double sub_total) {
+    public void setSub_total(BigDecimal sub_total) {
         this.sub_total = sub_total;
     }
     

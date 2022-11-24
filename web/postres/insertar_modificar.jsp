@@ -5,7 +5,7 @@
     <div class="col-sm-12 mt-2 grid-margin stretch-card flex-column">
         <h1 class="text-dark text-center">Postres</h1>
         <form class="ml-auto mr-auto shadow col-sm-8 row mt-2 mb-2" id="formulario_postres" class="table-responsive" name="form_postres" onsubmit="return validar();" 
-                      action="${pageContext.servletContext.contextPath}/Postres?accion=insertar_modificar" 
+                      action="${pageContext.servletContext.contextPath}/Postres?accion=insertar_modificar&op=${opcion}" 
                       method="POST">
             <div class="col-sm-6 mt-2">
                 <label class="mb-0 text-dark" for="usuario">ID Postre</label>

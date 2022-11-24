@@ -11,18 +11,18 @@
                 <p style="color:darkred"><strong>La operación no se realizó.</strong></p>
             </c:if>
         </c:if>
-        <h1>Listado Reservas</h1><br>  
+        <h1>Listado Facturas</h1><br>  
         <div>
             <div class="container">
                 <ul> 
-                    <li style="list-style: none;"><a class="btn btn-success" href="${pageContext.servletContext.contextPath}/Reservas?accion=insertar&op=${opcion}">Nuevo</a></li>
+                    <li style="list-style: none;"><a class="btn btn-success" href="${pageContext.servletContext.contextPath}/Facturas?accion=insertar&op=${opcion}">Nuevo</a></li>
                 </ul>
             </div>
             <div class="container ml-auto mr-auto col-sm-5">
                 <ul class="navbar-nav w-100">
                     <li class="nav-item w-100 ">
-                        <form action="${pageContext.servletContext.contextPath}/Reservas?op=${opcion}" method="get" class="nav-link mt-2 mt-md-0 d-lg-flex">
-                            <input type="text" name="txtBusqueda" id="txtBusqueda" value="${valor}" class="form-control" placeholder="Buscar por fecha de reserva">
+                        <form action="${pageContext.servletContext.contextPath}/Facturas?op=${opcion}" method="get" class="nav-link mt-2 mt-md-0 d-lg-flex">
+                            <input type="text" name="txtBusqueda" id="txtBusqueda" value="${valor}" class="form-control" placeholder="Buscar facturas">
                         </form>
                     </li>
                 </ul>

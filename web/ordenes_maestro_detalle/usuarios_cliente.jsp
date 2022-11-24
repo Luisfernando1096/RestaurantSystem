@@ -55,7 +55,7 @@
                         //redirecciona hacia vuelos.jsp con los valores obtenidos
                         //de idorigen y origen
                         window.opener.location.href =
-                                "${pageContext.servletContext.contextPath}/Ordenes?idCliente=" + idCliente + "&cliente=" + cliente;
+                                "${pageContext.servletContext.contextPath}/OrdenesMaestroDetalle?idCliente=" + idCliente + "&cliente=" + cliente+"&op=${opcion}";
                         //cierra la ventana
                         window.close();
                         return false;

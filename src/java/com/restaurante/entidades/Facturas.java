@@ -1,7 +1,8 @@
 package com.restaurante.entidades;
 
 import com.restaurante.anotaciones.*;
-import java.sql.Date;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @Entity(table = "facturas")
 public class Facturas {
@@ -9,11 +10,13 @@ public class Facturas {
     @PrimaryKey
     private int idFactura;
     @NotNull
-    private Date fecha;
+    private Timestamp fecha;
     @NotNull
     private java.math.BigDecimal  total;
     @NotNull
-    private int idCliente;
+    private String idCliente;
+    @NotNull
+    private int idOrden;
     @NotNull
     private int idFormaPago;
     @NotNull
@@ -22,22 +25,30 @@ public class Facturas {
     private java.math.BigDecimal cambio;
     @NotNull
     private String estado;
-    @NotNull
     private int idTarjeta;
 
     public Facturas() {
     }
 
-    public Facturas(int idFactura, Date fecha, java.math.BigDecimal total, int idCliente, int idFormaPago, java.math.BigDecimal efectivo, java.math.BigDecimal cambio, String estado, int idTarjeta) {
+    public Facturas(int idFactura, Timestamp fecha, BigDecimal total, String idCliente, int idOrden, int idFormaPago, BigDecimal efectivo, BigDecimal cambio, String estado, int idTarjeta) {
         this.idFactura = idFactura;
         this.fecha = fecha;
         this.total = total;
         this.idCliente = idCliente;
+        this.idOrden = idOrden;
         this.idFormaPago = idFormaPago;
         this.efectivo = efectivo;
         this.cambio = cambio;
         this.estado = estado;
         this.idTarjeta = idTarjeta;
+    }
+
+    public int getIdOrden() {
+        return idOrden;
+    }
+
+    public void setIdOrden(int idOrden) {
+        this.idOrden = idOrden;
     }
 
     public int getIdFactura() {
@@ -48,11 +59,11 @@ public class Facturas {
         this.idFactura = idFactura;
     }
 
-    public Date getFecha() {
+    public Timestamp getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(Timestamp fecha) {
         this.fecha = fecha;
     }
 
@@ -64,11 +75,11 @@ public class Facturas {
         this.total = total;
     }
 
-    public int getIdCliente() {
+    public String getIdCliente() {
         return idCliente;
     }
 
-    public void setIdCliente(int idCliente) {
+    public void setIdCliente(String idCliente) {
         this.idCliente = idCliente;
     }
 

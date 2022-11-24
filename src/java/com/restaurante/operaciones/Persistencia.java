@@ -3,14 +3,20 @@ package com.restaurante.operaciones;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.DatePicker;
 
 public class Persistencia extends ManejadorSentencias {
 
@@ -75,10 +81,8 @@ public class Persistencia extends ManejadorSentencias {
             stmt.setObject(1, pk);
             //System.out.println("ENTRO AQUI");
             ResultSet rs = stmt.executeQuery();
-            System.out.println("ENTRO AQUI");
             Field[] fs = entity.getClass().getDeclaredFields();
             while (rs.next()) {
-                System.out.println("ENTRO AQUI");
                 for (int i = 0; i < super.getCampos().size(); i++) {
                     Object valor = rs.getObject(super.getCampos().get(i).getNombre());
                     if (fs[i].getModifiers() != Modifier.PRIVATE) {
@@ -91,6 +95,7 @@ public class Persistencia extends ManejadorSentencias {
                         if (valor instanceof Long) {
                             valor = Integer.parseInt(valor.toString());
                         }
+                        
                         field.set(entity, valor);
                     }
                 }

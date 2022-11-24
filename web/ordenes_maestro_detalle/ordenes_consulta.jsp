@@ -23,7 +23,7 @@
             </c:if>
         </c:if>
         <div class="container">
-            <form class="col-10 shadow ml-auto mr-auto" method="post" action="${pageContext.servletContext.contextPath}/Ordenes" onsubmit="return validar();">
+            <form class="col-10 shadow ml-auto mr-auto p-2" method="post" action="${pageContext.servletContext.contextPath}/OrdenesMaestroDetalle" onsubmit="return validar();">
                 <!--<input type="hidden" name="sw_nuevo" value="1"/>-->
                 <div class="container">
                     <label class="col-12 text-black">Seleccione Cliente</label>
@@ -32,8 +32,8 @@
                     <input class="mr-2 mt-2 col-10 float-left form-control bg-light text-dark" type="text" id="txtCliente" name="txtCliente" value="${cliente}"
                            readonly="readonly">
                     <input type="button" class="mt-2 col-1 form-control bg-light text-dark" value="..."
-                           onclick="abrirVentana('${pageContext.servletContext.contextPath}/Ordenes?accion=listado_clientes');">
-                    <a class="mt-2 btn btn-behance" href="${pageContext.servletContext.contextPath}/Reportes?cliente=${idCliente}" id="Target">Ver Reporte</a>
+                           onclick="abrirVentana('${pageContext.servletContext.contextPath}/OrdenesMaestroDetalle?accion=listado_clientes');">
+                    <a class="mt-2 btn btn-behance" href="${pageContext.servletContext.contextPath}/Reportes?cliente=${idCliente}&op=${opcion}" id="Target">Ver Reporte</a>
                     <c:if test="${resultado!=null}">
                         <c:if test="${resultado==0}">
                             <p style="color:darkred"><strong>Debe seleccionar un cliente.</strong></p>
@@ -51,22 +51,22 @@
                     <input class="mr-2 col-3 form-control bg-light text-dark" type="text" name="txtIdEmpleado" id="txtIdEmpleado" size="6" readonly="readonly">
                     <input class="mr-2 mt-2 col-10 float-left form-control bg-light text-dark" type="text" name="txtEmpleado" id="txtEmpleado" size="50" readonly="readonly">
                     <input type="button" value="..." class="mt-2 col-1 form-control bg-light text-dark"
-                           onclick="abrirVentana('${pageContext.servletContext.contextPath}/Ordenes?accion=listado_empleados');">
+                           onclick="abrirVentana('${pageContext.servletContext.contextPath}/OrdenesMaestroDetalle?accion=listado_empleados&op=${opcion}');">
                 </div>
                 <div class="container">
                     <label class="col-12 text-black">Tipo :</label>
                     <input class="mr-2 col-3 form-control bg-light text-dark" type="text" name="txtIdTipo" id="txtIdTipo" size="6" readonly="readonly">
                     <input class="mr-2 mt-2 col-10 float-left form-control bg-light text-dark" type="text" name="txtTipo" id="txtTipo" size="50" readonly="readonly">
                     <input type="button" value="..." class="mt-2 col-1 form-control bg-light text-dark"
-                           onclick="abrirVentana('${pageContext.servletContext.contextPath}/Ordenes?accion=listado_tipo');">
+                           onclick="abrirVentana('${pageContext.servletContext.contextPath}/OrdenesMaestroDetalle?accion=listado_tipo&op=${opcion}');">
                 </div>
                 <div class="container">
                     <label class="col-12 text-black">Fecha y Hora Envio:</label>
                     <input class="mr-2 col-5 form-control bg-light text-dark datepicker" type="text" name="txtFechaEnvio" size="25">
                 </div>
 
-                <div class="container">
-                    <input type="submit" value="Agregar" class="m-2 btn btn-success float-right">
+                <div class="container d-block">
+                    <input type="submit" value="Agregar" class="mb-2 d-block btn btn-success mr-5 ml-auto">
                 </div>
             </form>
             </br></br>

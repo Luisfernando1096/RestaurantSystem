@@ -15,11 +15,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,8 +27,8 @@ import java.util.logging.Logger;
  *
  * @author fruiz
  */
-@WebServlet(name = "Reservas", urlPatterns = {"/Reservas"})
-public class Reservas extends HttpServlet {
+@WebServlet(name = "PlatilloOrden", urlPatterns = {"/PlatilloOrden"})
+public class PlatilloOrden extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws
@@ -38,7 +37,7 @@ public class Reservas extends HttpServlet {
         String op = request.getParameter("op");
         HttpSession s = request.getSession();
         String accion = request.getParameter("accion");
-        if (op == null || !op.equals("11")) {
+        if (op == null || !op.equals("22")) {
             request.getRequestDispatcher("testConexion2.jsp").forward(request, response);
         } else {
             if (accion == null) {
@@ -54,30 +53,31 @@ public class Reservas extends HttpServlet {
 
                     String sql = "";
                     if (request.getParameter("txtBusqueda") != null) {
-                        sql = "select idReserva, fecha, cli.nombres from reservas "
-                                + "inner join usuarios as cli on cli.usuario = reservas.idCliente "
-                                + "where fecha like ?";
+                        sql = "select idPlatilloOrden, idOrden, b.platillo, cantidad, sub_total from platillo_orden "
+                                + "inner join platillos as b on b.idPlatillo = platillo_orden.idPlatillo where b.platillo like ?";
                     } else {
-                        sql = "select idReserva, fecha, cli.nombres from reservas "
-                                + "inner join usuarios as cli on cli.usuario = reservas.idCliente ";
+                        sql = "select idPlatilloOrden, idOrden, b.platillo, cantidad, sub_total from platillo_orden "
+                                + "inner join platillos as b on b.idPlatillo = platillo_orden.idPlatillo";
                     }
-                    String[][] reservas = null;
+                    String[][] platillos = null;
                     if (request.getParameter("txtBusqueda") != null) {
                         List<Object> params = new ArrayList<>();
                         params.add("%" + request.getParameter("txtBusqueda") + "%");
 
-                        reservas = Operaciones.consultar(sql, params);
+                        platillos = Operaciones.consultar(sql, params);
                     } else {
-                        reservas = Operaciones.consultar(sql, null);
+                        platillos = Operaciones.consultar(sql, null);
                     }
                     //declaracion de cabeceras a usar en la tabla HTML
                     String[] cabeceras = new String[]{
-                        "ID Reserva",
-                        "Fecha",
-                        "Cliente"
+                        "ID PlatilloOrden",
+                        "Orden",
+                        "Platillo",
+                        "Cantidad",
+                        "Sub Total"
                     };
                     //variable de tipo Tabla para generar la Tabla HTML
-                    Tabla tab = new Tabla(reservas, //array que contiene los datos
+                    Tabla tab = new Tabla(platillos, //array que contiene los datos
                             "50%", //ancho de la tabla px | % 
                             Tabla.STYLE.TABLE01, //estilo de la tabla
                             Tabla.ALIGN.CENTER, // alineacion de la tabla
@@ -91,18 +91,18 @@ public class Reservas extends HttpServlet {
                     //Texto de eliminar
                     //tab.setTextoEliminable("");
                     //pagina encargada de eliminar
-                    tab.setPaginaEliminable("/Reservas?accion=eliminar" + "&op=" + op);
+                    tab.setPaginaEliminable("/PlatilloOrden?accion=eliminar" + "&op=" + op);
                     //pagina encargada de actualizacion
-                    tab.setPaginaModificable("/Reservas?accion=modificar" + "&op=" + op);
+                    tab.setPaginaModificable("/PlatilloOrden?accion=modificar" + "&op=" + op);
                     //pagina encargada de seleccion para operaciones
-                    tab.setPaginaSeleccionable("/Reservas?accion=modificar" + "&op=" + op);
+                    tab.setPaginaSeleccionable("/PlatilloOrden?accion=modificar" + "&op=" + op);
                     //icono para modificar y eliminar
                     //tab.setIconoModificable("/iconos/edit.png");
                     //tab.setIconoEliminable("/iconos/delete.png");
                     //columnas seleccionables
                     tab.setColumnasSeleccionables(new int[]{1});
                     //pie de tabla
-                    tab.setPie("Resultado reservas");
+                    tab.setPie("Resultado orden platillos");
                     //imprime la tabla en pantalla
                     String tabla01 = tab.getTabla();
                     request.setAttribute("tabla", tabla01);
@@ -110,18 +110,18 @@ public class Reservas extends HttpServlet {
 
                     //Controlar los permisos
                     request.setAttribute("opcion", op);
-                    com.restaurante.utilerias.Permiso.getPermiso(s, "reservas/reservas_consulta.jsp", request, response, op);
+                    com.restaurante.utilerias.Permiso.getPermiso(s, "platillos_orden/platillos_orden_consulta.jsp", request, response, op);
                 } catch (Exception ex) {
                     try {
                         Operaciones.rollback();
                     } catch (SQLException ex1) {
-                        Logger.getLogger(com.restaurante.entidades.Reservas.class.getName()).log(Level.SEVERE, null, ex1);
+                        Logger.getLogger(com.restaurante.entidades.PlatilloOrden.class.getName()).log(Level.SEVERE, null, ex1);
                     }
                 } finally {
                     try {
                         Operaciones.cerrarConexion();
                     } catch (SQLException ex) {
-                        Logger.getLogger(com.restaurante.entidades.Reservas.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(com.restaurante.entidades.PlatilloOrden.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             } else if (accion.equals("insertar")) {
@@ -131,60 +131,64 @@ public class Reservas extends HttpServlet {
                     Operaciones.abrirConexion(cn);
                     Operaciones.iniciarTransaccion();
 
-                    List<com.restaurante.entidades.Usuarios> lista = Operaciones.getTodos(new com.restaurante.entidades.Usuarios());
-                    request.setAttribute("usuarios", lista);
+                    List<com.restaurante.entidades.Platillos> listaB = Operaciones.getTodos(new com.restaurante.entidades.Platillos());
+                    request.setAttribute("platillos", listaB);
+                    List<com.restaurante.entidades.Ordenes> listaO = Operaciones.getTodos(new com.restaurante.entidades.Ordenes());
+                    request.setAttribute("ordenes", listaO);
 
                 } catch (Exception e) {
                     try {
                         Operaciones.rollback();
                     } catch (SQLException ex1) {
-                        Logger.getLogger(com.restaurante.entidades.Usuarios.class.getName()).log(Level.SEVERE, null, ex1);
+                        Logger.getLogger(com.restaurante.entidades.PlatilloOrden.class.getName()).log(Level.SEVERE, null, ex1);
                     }
                 } finally {
                     try {
                         Operaciones.cerrarConexion();
                     } catch (SQLException ex) {
-                        Logger.getLogger(com.restaurante.entidades.Usuarios.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(com.restaurante.entidades.PlatilloOrden.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 //Controlar los permisos
                 request.setAttribute("opcion", op);
-                com.restaurante.utilerias.Permiso.getPermiso(s, "reservas/insertar_modificar.jsp", request, response, op);
+                com.restaurante.utilerias.Permiso.getPermiso(s, "platillos_orden/insertar_modificar.jsp", request, response, op);
             } else if (accion.equals("modificar")) {
                 try {
                     Conexion conn = new ConexionPool();
                     conn.conectar();
                     Operaciones.abrirConexion(conn);
                     Operaciones.iniciarTransaccion();
-                    com.restaurante.entidades.Reservas r = Operaciones.get(Integer.parseInt(request.getParameter("id")), new com.restaurante.entidades.Reservas());
-                    List<com.restaurante.entidades.Usuarios> lista = Operaciones.getTodos(new com.restaurante.entidades.Usuarios());
-                    request.setAttribute("usuarios", lista);
-                    request.setAttribute("reservas", r);
+                    com.restaurante.entidades.PlatilloOrden po = Operaciones.get(Integer.parseInt(request.getParameter("id")), new com.restaurante.entidades.PlatilloOrden());
+                    List<com.restaurante.entidades.Platillos> listaB = Operaciones.getTodos(new com.restaurante.entidades.Platillos());
+                    request.setAttribute("platillos", listaB);
+                    List<com.restaurante.entidades.Ordenes> listaO = Operaciones.getTodos(new com.restaurante.entidades.Ordenes());
+                    request.setAttribute("ordenes", listaO);
+                    request.setAttribute("platillos_orden", po);
                     Operaciones.commit();
                 } catch (Exception ex) {
                     try {
                         Operaciones.rollback();
                     } catch (SQLException ex1) {
-                        Logger.getLogger(com.restaurante.entidades.Reservas.class.getName()).log(Level.SEVERE, null, ex1);
+                        Logger.getLogger(com.restaurante.entidades.PlatilloOrden.class.getName()).log(Level.SEVERE, null, ex1);
                     }
                 } finally {
                     try {
                         Operaciones.cerrarConexion();
                     } catch (SQLException ex) {
-                        Logger.getLogger(com.restaurante.entidades.Reservas.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(com.restaurante.entidades.PlatilloOrden.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 //Controlar los permisos
                 request.setAttribute("opcion", op);
-                com.restaurante.utilerias.Permiso.getPermiso(s, "reservas/insertar_modificar.jsp", request, response, op);
+                com.restaurante.utilerias.Permiso.getPermiso(s, "platillos_orden/insertar_modificar.jsp", request, response, op);
             } else if (accion.equals("eliminar")) {
                 try {
                     Conexion conn = new ConexionPool();
                     conn.conectar();
                     Operaciones.abrirConexion(conn);
                     Operaciones.iniciarTransaccion();
-                    com.restaurante.entidades.Reservas r = Operaciones.eliminar(Integer.parseInt(request.getParameter("id")), new com.restaurante.entidades.Reservas());
-                    if (r.getIdReserva() != 0) {
+                    com.restaurante.entidades.PlatilloOrden po = Operaciones.eliminar(Integer.parseInt(request.getParameter("id")), new com.restaurante.entidades.PlatilloOrden());
+                    if (po.getIdPlatilloOrden() != 0) {
                         request.getSession().setAttribute("resultado", 1);
                     } else {
                         request.getSession().setAttribute("resultado", 0);
@@ -194,17 +198,17 @@ public class Reservas extends HttpServlet {
                     try {
                         Operaciones.rollback();
                     } catch (SQLException ex1) {
-                        Logger.getLogger(com.restaurante.entidades.Reservas.class.getName()).log(Level.SEVERE, null, ex1);
+                        Logger.getLogger(com.restaurante.entidades.PlatilloOrden.class.getName()).log(Level.SEVERE, null, ex1);
                     }
                     request.getSession().setAttribute("resultado", 0);
                 } finally {
                     try {
                         Operaciones.cerrarConexion();
                     } catch (SQLException ex) {
-                        Logger.getLogger(com.restaurante.entidades.Reservas.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(com.restaurante.entidades.PlatilloOrden.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                response.sendRedirect(request.getContextPath() + "/Reservas" + "?op=" + op);
+                response.sendRedirect(request.getContextPath() + "/PlatilloOrden" + "?op=" + op);
             }
         }
     }
@@ -216,35 +220,66 @@ public class Reservas extends HttpServlet {
         String op = request.getParameter("op");
         switch (accion) {
             case "insertar_modificar": {
-                String idReserva = request.getParameter("txtIdReserva");
-                String fecha = request.getParameter("txtFecha");
-                String idCliente = request.getParameter("lista_clientes");
+                String idPlatilloOrden = request.getParameter("txtIdPlatilloOrden");
+                int idPlatillo = Integer.parseInt(request.getParameter("lista_platillos"));
+                int idOrden = Integer.parseInt(request.getParameter("lista_ordenes"));
+                String cantidad = request.getParameter("txtCantidad");
+                java.math.BigDecimal subTotal = new java.math.BigDecimal(BigInteger.ONE);
+                try {
+                    Conexion conn = new ConexionPool();
+                    conn.conectar();
+                    Operaciones.abrirConexion(conn);
+                    Operaciones.iniciarTransaccion();
 
+                    String sql = "";
+                    sql = "select sum(?*b.precio_unitario) from platillos b where b.idPlatillo = ?";
+                    String[][] subTo = null;
+                    List<Object> list = new ArrayList<>();
+                    list.add(Integer.parseInt(cantidad));
+                    list.add(idPlatillo);
+                    subTo = Operaciones.consultar(sql, list);
+                    subTotal = BigDecimal.valueOf(Double.valueOf(subTo[0][0]));
+
+                } catch (Exception ex) {
+                    try {
+                        Operaciones.rollback();
+                    } catch (SQLException ex1) {
+                        Logger.getLogger(com.restaurante.entidades.Platillos.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                } finally {
+                    try {
+                        Operaciones.cerrarConexion();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(com.restaurante.entidades.Platillos.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 try {
                     Conexion conn = new ConexionPool();
                     conn.conectar();
 
                     Operaciones.abrirConexion(conn);
                     Operaciones.iniciarTransaccion();
-                    if (idReserva != null && !idReserva.equals("")) {
-                        com.restaurante.entidades.Reservas r = new com.restaurante.entidades.Reservas();
-                        r.setIdReserva(Integer.parseInt(idReserva));
-                        r.setIdCliente(idCliente);
-                        Date fech = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(fecha);
-                        r.setFecha(new Timestamp(fech.getTime()));
-                        r = Operaciones.actualizar(r.getIdReserva(), r);
-                        if (r.getIdReserva() != 0) {
+                    if (idPlatilloOrden != null && !idPlatilloOrden.equals("")) {
+                        com.restaurante.entidades.PlatilloOrden po = new com.restaurante.entidades.PlatilloOrden();
+                        po.setIdPlatilloOrden(Integer.parseInt(idPlatilloOrden));
+                        po.setIdPlatillo(idPlatillo);
+                        po.setIdOrden(idOrden);
+                        po.setCantidad(Integer.parseInt(cantidad));
+                        po.setSub_total(subTotal);
+                        po = Operaciones.actualizar(po.getIdPlatilloOrden(), po);
+                        if (po.getIdPlatilloOrden() != 0) {
                             request.getSession().setAttribute("resultado", 1);
                         } else {
                             request.getSession().setAttribute("resultado", 0);
                         }
                     } else {
-                        com.restaurante.entidades.Reservas r = new com.restaurante.entidades.Reservas();
-                        Date fech = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(fecha);
-                        r.setFecha(new Timestamp(fech.getTime()));
-                        r.setIdCliente(idCliente);
-                        r = Operaciones.insertar(r);
-                        if (r.getIdReserva() != 0) {
+                        com.restaurante.entidades.PlatilloOrden bo = new com.restaurante.entidades.PlatilloOrden();
+                        bo.setIdPlatillo(idPlatillo);
+                        bo.setIdOrden(idOrden);
+                        bo.setCantidad(Integer.parseInt(cantidad));
+                        bo.setSub_total(subTotal);
+                        bo = Operaciones.insertar(bo);
+                        if (bo.getIdPlatilloOrden() != 0) {
                             request.getSession().setAttribute("resultado", 1);
                         } else {
                             request.getSession().setAttribute("resultado", 0);
@@ -255,19 +290,20 @@ public class Reservas extends HttpServlet {
                     try {
                         Operaciones.rollback();
                     } catch (SQLException ex1) {
-                        Logger.getLogger(com.restaurante.entidades.Reservas.class.getName()).log(Level.SEVERE, null, ex1);
+                        Logger.getLogger(com.restaurante.entidades.PlatilloOrden.class.getName()).log(Level.SEVERE, null, ex1);
                     }
                     request.getSession().setAttribute("resultado", 2);
                 } finally {
                     try {
                         Operaciones.cerrarConexion();
                     } catch (SQLException ex) {
-                        Logger.getLogger(com.restaurante.entidades.Reservas.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(com.restaurante.entidades.PlatilloOrden.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                response.sendRedirect(request.getContextPath() + "/Reservas" + "?op=" + op);
+                response.sendRedirect(request.getContextPath() + "/PlatilloOrden" + "?op=" + op);
                 break;
             }
+
             case "eliminar": {
                 break;
             }

@@ -1,7 +1,6 @@
 package com.restaurante.utilerias;
 
 import com.restaurante.entidades.Menus;
-import jakarta.jms.Session;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,8 +10,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Permiso {
-
-    public Permiso(HttpSession s , String url, HttpServletRequest request, HttpServletResponse response, String op) throws ServletException, IOException {
+    
+    public static void getPermiso(HttpSession s, String url, HttpServletRequest request, HttpServletResponse response, String op) 
+            throws ServletException, IOException{
         //Redirecciona donde quiero al no estar logueado
             if (s.getAttribute("Usuario") == null) {
                 request.getRequestDispatcher("Login").forward(request, response);
@@ -38,10 +38,9 @@ public class Permiso {
             if (!control && op == null) {
                 request.getRequestDispatcher(url).forward(request, response);
             } else if (control) {
-                request.getRequestDispatcher("url").forward(request, response);
+                request.getRequestDispatcher(url).forward(request, response);
             } else {
                 request.getRequestDispatcher("testConexion2.jsp").forward(request, response);
             }
-        
     }
 }

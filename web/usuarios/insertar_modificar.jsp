@@ -5,7 +5,7 @@
     <div class="col-sm-12 mt-2 grid-margin stretch-card flex-column">
         <h1 class="text-dark text-center">Usuarios</h1>
         <form class="ml-auto mr-auto shadow col-sm-8 row mt-2 mb-2" id="formulario_usuarios" class="table-responsive" name="form_usuarios" onsubmit="return validar();" 
-              action="${pageContext.servletContext.contextPath}/Usuarios?accion=insertar_modificar" 
+              action="${pageContext.servletContext.contextPath}/Usuarios?accion=insertar_modificar&op=${opcion}" 
               method="POST">
             <div class="col-sm-6 mt-2">
                 <label class="mb-0 text-dark" for="txtUsuario">Usuario</label>

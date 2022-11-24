@@ -13,8 +13,8 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Operacion exitosa</h1>
-        <a href="${pageContext.servletContext.contextPath}">Regresar</a>
+        <h1>No tienes permiso para estar aqui</h1>
+        <a href="${pageContext.servletContext.contextPath}/Principal">Regresar</a>
     </body>
 </html>
 

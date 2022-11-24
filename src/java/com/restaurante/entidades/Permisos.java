@@ -1,9 +1,6 @@
 package com.restaurante.entidades;
 
-import com.restaurante.anotaciones.AutoIncrement;
-import com.restaurante.anotaciones.Entity;
-import com.restaurante.anotaciones.NotNull;
-import com.restaurante.anotaciones.PrimaryKey;
+import com.restaurante.anotaciones.*;
 
 @Entity(table = "permisos")
 public class Permisos {

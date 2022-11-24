@@ -15,13 +15,13 @@
         <div>
             <div class="container">
                 <ul> 
-                    <li style="list-style: none;"><a class="btn btn-success" href="${pageContext.servletContext.contextPath}/Postres?accion=insertar">Nuevo</a></li>
+                    <li style="list-style: none;"><a class="btn btn-success" href="${pageContext.servletContext.contextPath}/Postres?accion=insertar&op=${opcion}">Nuevo</a></li>
                 </ul>
             </div>
             <div class="container ml-auto mr-auto col-sm-5">
                 <ul class="navbar-nav w-100">
                     <li class="nav-item w-100 ">
-                        <form action="${pageContext.servletContext.contextPath}/Postres" method="get" class="nav-link mt-2 mt-md-0 d-lg-flex">
+                        <form action="${pageContext.servletContext.contextPath}/Postres?op=${opcion}" method="get" class="nav-link mt-2 mt-md-0 d-lg-flex">
                             <input type="text" name="txtBusqueda" id="txtBusqueda" value="${valor}" class="form-control" placeholder="Buscar postres">
                         </form>
                     </li>

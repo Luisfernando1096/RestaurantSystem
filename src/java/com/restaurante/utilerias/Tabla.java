@@ -178,7 +178,7 @@ public class Tabla {
                         if (found) {
                             String enlaceSeleccionable;
                             enlaceSeleccionable = rst[i][k];
-                            Tabla += "<td><a onclick=\"return confirm('¿Está seguro?')\" href='" + getPaginaSeleccionable() + (getPaginaSeleccionable().contains("?") ? "&" : "?") + "&id=" + rst[0][k] + "'>"
+                            Tabla += "<td><a onclick=\"return confirm('¿Está seguro?')\" href='" + getPaginaSeleccionable() + (getPaginaSeleccionable().contains("?") ? "&" : "?") + "id=" + rst[0][k] + "'>"
                                     + enlaceSeleccionable + "</a></td>";
                         } else {
                             Tabla += "<td>" + rst[i][k] + "</td>";

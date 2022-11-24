@@ -5,7 +5,7 @@
     <div class="col-sm-12 mt-2 grid-margin stretch-card flex-column">
         <h1 class="text-dark text-center">Bebidas</h1>
         <form class="ml-auto mr-auto shadow col-sm-8 row mt-2 mb-2" id="formulario_bebidas" class="table-responsive" name="form_bebidas" onsubmit="return validar();" 
-                      action="${pageContext.servletContext.contextPath}/Clasificaciones?accion=insertar_modificar" 
+                      action="${pageContext.servletContext.contextPath}/Clasificaciones?accion=insertar_modificar&op=${opcion}" 
                       method="POST">
             <div class="col-sm-6 mt-2">
                 <label class="mb-0 text-dark" for="txtIdClasificacion">ID Clasificacion</label>
